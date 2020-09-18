@@ -26,7 +26,14 @@ app.get("/notes", function(req, res) {
 });
 
 app.get("/api/notes", function(req, res) {
-  return res.sendFile(path.join(__dirname, "db.json"))
+  return res.json(activeNote);
+})
+
+app.post("api/notes", function(req, res){
+  var newNote = req.body;
+  newNote.routeName = newNote.name.replace(/\s+/g, "").toLowerCase();
+  activeNote.push(newNote);
+  res.json(newNote);
 })
 
 // A function for getting all notes from the db
