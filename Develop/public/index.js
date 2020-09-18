@@ -18,12 +18,16 @@ const $noteList = $(".list-container .list-group");
 let activeNote = {};
 
 app.get("/", function(req, res) {
-  res.sendFile(path.join(__dirname, "../assets/index.html"));
+  res.sendFile(path.join(__dirname, "../public/index.html"));
 });
 
-app.get("/add", function(req, res) {
-  res.sendFile(path.join(__dirname, "../assets/notes.html"));
+app.get("/notes", function(req, res) {
+  res.sendFile(path.join(__dirname, "../public/notes.html"));
 });
+
+app.get("/api/notes", function(req, res) {
+  return res.sendFile(path.join(__dirname, "db.json"))
+})
 
 // A function for getting all notes from the db
 const getNotes = () => {
