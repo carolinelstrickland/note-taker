@@ -48,7 +48,6 @@ app.post("/api/notes", function(req, res){
 app.delete("/api/notes/:id", function(req, res){
     fs.readFile("db/db.json", function(err,data){
         if (err) throw err;
-        console.log(req.params.id);
         let json = JSON.parse(data);
         const note = json.filter(note => note.id != req.params.id)
         fs.writeFile("db/db.json", JSON.stringify(note), function(err,data){
