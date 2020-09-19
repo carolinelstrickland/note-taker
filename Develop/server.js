@@ -1,5 +1,6 @@
 var express = require("express");
 var path = require("path");
+var fs = require("fs");
 
 var app = express();
 
@@ -10,7 +11,11 @@ app.use(express.json());
 app.use(express.static('public'));
   
 app.get("/api/notes", function(req, res) {
-    return res.json(activeNote);
+    fs.readFile("db/db.json", function(err,data){
+        if (err) throw err;
+        console.log(data);
+        return res.json(JSON.parse(data));
+    });
 });
 
 app.get("/notes", function(req, res) {
@@ -21,7 +26,7 @@ app.get("/", function(req, res) {
     res.sendFile(path.join(__dirname, "../Develop/public/index.html"));
 });
 
-app.post("api/notes", function(req, res){
+app.post("/api/notes", function(req, res){
     fs.readFile("db/db.json", function(err,data){
         if (err) throw err;
         let json = JSON.parse(data);
@@ -32,16 +37,27 @@ app.post("api/notes", function(req, res){
     };
     json.push(newNote);
     fs.writeFile("db/db.json", JSON.stringify(json),
-        function (err) {
+        function (err,data) {
             if (err) throw err;
+            // learn to solve using fs write file
             res.redirect("/notes");
         });
     });
 }); 
 
-// app.delete("api/notes/:id", function(req, res){
-
-// }
+app.delete("/api/notes/:id", function(req, res){
+    fs.readFile("db/db.json", function(err,data){
+        if (err) throw err;
+        console.log(req.params.id);
+        let json = JSON.parse(data);
+        const note = json.filter(note => note.id != req.params.id)
+        fs.writeFile("db/db.json", JSON.stringify(note), function(err,data){
+            if (err) throw err;
+            // learn to solve using fs write file
+            res.end(data);
+        });
+    });
+});
 
 app.listen(PORT, function() {
     console.log("App listening on PORT " + PORT);
