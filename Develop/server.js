@@ -34,7 +34,7 @@ app.post("api/notes", function(req, res){
     fs.writeFile("db/db.json", JSON.stringify(json),
         function (err) {
             if (err) throw err;
-            res.redirect("api/notes");
+            res.redirect("/notes");
         });
     });
 }); 
